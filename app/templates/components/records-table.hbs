@@ -1,1 +1,25 @@
-{{yield}}
+{{#light-table table height='65vh' as |t|}}
+
+  {{t.head fixed=true}}
+
+  {{#t.body as |body|}}
+    {{!-- {{#body.expanded-row as |row|}}
+      Hello <b>{{row.firstName}}</b>
+    {{/body.expanded-row}} --}}
+
+    {{#if isLoading}}
+      {{#body.loader}}
+        Loading...
+      {{/body.loader}}
+    {{/if}}
+
+    {{#if table.isEmpty}}
+      {{#body.no-data}}
+        Click a neighborhood on the right to zoom in!
+      {{/body.no-data}}
+    {{/if}}
+  {{/t.body}}
+
+  {{!-- {{t.foot}} --}}
+
+{{/light-table}}

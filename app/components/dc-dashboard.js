@@ -30,12 +30,20 @@ export default Ember.Component.extend({
         }
       }
     )
-    // debugger;
-    // let parseDate = d3.time.format('MM-DD-YYYY').parse;
-    // let parseDate2 = d3.time.format('%m/%d').parse;
-
     return crossfilter(transformedData);
     // }
+  }),
+
+  markers: computed('records', function() {
+    let records = this.get('records');
+    if (this.get('community_area') && records.length) {
+      return records.filter(
+        (d) => {
+          return !!d.get('latitude') && !!d.get('longitude');
+        }
+      )
+      // this.get('records')
+    }
   }),
 
   updateMap: task(function* () {

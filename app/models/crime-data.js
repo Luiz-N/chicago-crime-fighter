@@ -7,5 +7,7 @@ export default DS.Model.extend({
   year: attr(),
   primaryType: attr(),
   countArrest: attr(),
-  date: attr()
+  date: attr(),
+  latitude: attr(),
+  longitude: attr()
 });

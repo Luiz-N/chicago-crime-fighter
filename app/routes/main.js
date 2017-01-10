@@ -13,7 +13,7 @@ export default Ember.Route.extend({
     let promises = {};
     let typesFilter = [];
     let yearsFilter = [];
-    let recordQuery = {where: []};
+    let recordQuery = {where: [], limit: 50};
     let q = {where: [], group: []};
     if (!this.get('controller')) {
       q.limit = 50000;
@@ -40,38 +40,33 @@ export default Ember.Route.extend({
           });
         });
     }
-    if (params.primary_type) {
-      let types = params.primary_type.split(',');
-      types.forEach(
-        (type) => {
-          typesFilter.push(`primary_type = '${type}'`)
-        }
-      )
-      recordQuery.where.push(...[Soda.expr.or.apply(this, typesFilter)]);
+    else if (params.community_area) {
+      if (params.primary_type) {
+        let types = params.primary_type.split(',');
+        types.forEach(
+          (type) => {
+            typesFilter.push(`primary_type = '${type}'`)
+          }
+        )
+        recordQuery.where.push(...[Soda.expr.or.apply(this, typesFilter)]);
+      }
+
+      if (params.year) {
+        let years = params.year.split(',');
+        years.forEach(
+          (year) => {
+            yearsFilter.push(`year = '${year}'`)
+          }
+        )
+        recordQuery.where.push(...[Soda.expr.or.apply(this, yearsFilter)]);
+      }
+
+      if (params.community_area) {
+        recordQuery.where.push(`community_area = '${params.community_area}'`);
+      }
+      promises.records = this.store.query('crime-data', recordQuery);
     }
-
-    if (params.year) {
-      let years = params.year.split(',');
-      years.forEach(
-        (year) => {
-          yearsFilter.push(`year = '${year}'`)
-        }
-      )
-      recordQuery.where.push(...[Soda.expr.or.apply(this, yearsFilter)]);
-    }
-
-    if (params.community_area) {
-      recordQuery.where.push(`community_area = '${params.community_area}'`);
-    }
-
-
-    // q.query = "$where=(primary_type = 'THEFT' OR primary_type = 'THEFT'";
-    // q.where.push("primary_type = 'ROBBERY'");
-    // q.where.push("primary_type = 'THEFT'");
-    // q.where = [Soda.expr.or.apply(this, q.where)];
-    // q.where.push("year = 2013")
-    promises.records = this.store.query('crime-data', recordQuery);
-    this.store.unloadAll()
+    this.store.unloadAll();
     return Ember.RSVP.hash(promises);
   },
   setupController(controller, responses) {
@@ -82,6 +77,14 @@ export default Ember.Route.extend({
   },
 
   actions: {
+    loading(transition, originRoute) {
+      let controller = this.controllerFor('main');
+      controller.set('isLoading', true);
+      transition.promise.finally(() => {
+        controller.set('isLoading', false);
+      });
+      // controller.set('currentlyLoading', true);
+    },
     setTypeFilters(filters) {
       this.get('controller').set('primary_type', filters);
     },

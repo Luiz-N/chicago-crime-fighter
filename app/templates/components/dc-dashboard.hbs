@@ -30,17 +30,32 @@
   </div>
   <div class="flex layout-row">
     {{typeFilters}}
-    <div class="flex">
-      {{#each records as |record|}}
+    <div class="flex table-wrapper">
+      {{#records-table
+        records=records
+        isLoading=isLoading
+      }}
+
+      {{/records-table}}
+      {{!-- {{#each records as |record|}}
         <div class="">
           {{record.primaryType}}
         </div>
-      {{/each}}
+      {{/each}} --}}
     </div>
     <div class="flex chart">
       <h3>map</h3>
       {{#leaflet-map lat=lat lng=lng zoom=zoom class="flex" as |layers|}}
         {{tile-layer url="http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"}}
+          {{#each markers as |m|}}
+            {{#marker-layer lat=m.latitude lng=m.longitude }}
+              {{#popup-layer popupOpen=(readonly m.isOpen)}}
+                <h3>{{m.primaryType}}</h3>
+                {{moment-calendar m.date}}
+              {{/popup-layer}}
+            {{/marker-layer}}
+          {{/each}}
+
           {{#each communities as |comm|}}
             {{#layers.geoJSON geoJSON=comm.geom key=comm.key weight=1 opacity=0.25 fillOpacity=0.75 fillColor=comm.color onClick=(action "filterComm" comm.key) as |area|}}
               {{!-- {{#area.tooltip}}
