@@ -5,8 +5,19 @@ var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 module.exports = function(defaults) {
   var app = new EmberApp(defaults, {
     // Add options here
+    babel: {
+      includePolyfill: true
+    },
+    sassOptions: {
+      includePaths: [
+        'app/styles/custom'
+      ],
+    },
   });
-
+  app.import('bower_components/d3/d3.min.js');
+  app.import('bower_components/crossfilter2/crossfilter.min.js');
+  app.import('bower_components/dcjs/dc.js');
+  app.import('bower_components/dcjs/dc.min.css');
   // Use `app.import` to add additional libraries to the generated
   // output files.
   //

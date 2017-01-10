@@ -1,0 +1,54 @@
+{{#paper-content class="md-padding flex layout-column"}}
+{{!-- <h3>dashboard</h3> --}}
+
+    {{!-- <div class="flex-20">
+      <h3>pie chart</h3>
+    </div> --}}
+  <div class="flex-25 layout-row">
+    <div class="flex chart">
+      <h3 class="title">Incident Reports by Year</h3>
+      {{line-chart
+        class="flex"
+        dim=yearDim
+        group=yearGroupSum
+        activeFilters=(route-action 'setYearFilters')
+        updateMap=(perform updateMap)
+        id="line-chart"
+      }}
+    </div>
+    <div class="flex chart">
+      <h3>row chart</h3>
+      {{row-chart
+        class="flex"
+        dim=typeDim
+        group=typeGroupSum
+        activeFilters=(route-action 'setTypeFilters')
+        updateMap=(perform updateMap)
+        id="row-chart"
+      }}
+    </div>
+  </div>
+  <div class="flex layout-row">
+    {{typeFilters}}
+    <div class="flex">
+      {{#each records as |record|}}
+        <div class="">
+          {{record.primaryType}}
+        </div>
+      {{/each}}
+    </div>
+    <div class="flex chart">
+      <h3>map</h3>
+      {{#leaflet-map lat=lat lng=lng zoom=zoom class="flex" as |layers|}}
+        {{tile-layer url="http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"}}
+          {{#each communities as |comm|}}
+            {{#layers.geoJSON geoJSON=comm.geom key=comm.key weight=1 opacity=0.25 fillOpacity=0.75 fillColor=comm.color onClick=(action "filterComm" comm.key) as |area|}}
+              {{!-- {{#area.tooltip}}
+                {{comm.name}}
+              {{/area.tooltip}} --}}
+            {{/layers.geoJSON}}
+          {{/each}}
+      {{/leaflet-map}}
+    </div>
+  </div>
+{{/paper-content}}

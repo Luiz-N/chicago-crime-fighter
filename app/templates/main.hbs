@@ -1,0 +1,12 @@
+{{#paper-content
+  class="md-padding layout-align-center layout-column site-container flex"
+}}
+    {{#dc-dashboard
+      class="flex layout-row dashboard"
+      data=dashboardData
+      records=records
+      community_area=(mut community_area)
+    }}
+      {{!-- {{outlet}} --}}
+    {{/dc-dashboard}}
+{{/paper-content}}

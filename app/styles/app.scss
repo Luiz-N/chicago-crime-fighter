@@ -1,0 +1,9 @@
+@import 'ember-paper';
+@import 'site-container';
+@import 'dashboard';
+
+.ember-application {
+  &> .ember-view {
+    height: 100%;
+  }
+}
