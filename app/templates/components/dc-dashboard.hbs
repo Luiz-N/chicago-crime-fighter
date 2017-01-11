@@ -42,7 +42,7 @@
     <div class="flex chart">
       <h3>{{mapHeader}}</h3>
       {{#leaflet-map lat=lat lng=lng zoom=zoom class="flex" as |layers|}}
-        {{tile-layer url="http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"}}
+        {{tile-layer url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}@2x.png"}}
           {{#each markers as |m|}}
             {{#marker-layer lat=m.latitude lng=m.longitude }}
               {{#popup-layer popupOpen=(readonly m.isOpen)}}
