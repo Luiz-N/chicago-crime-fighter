@@ -9,13 +9,23 @@ export default Ember.Component.extend({
   lat: 41.8781,
   lng: -87.6298,
   zoom: 10,
-
+  communities: null,
   // didRender() {
   //   this._super(...arguments);
   //   this.get('updateMap').perform();
   // },
   renderAll: on('didInsertElement', function () {
     dc.renderAll();
+  }),
+
+  mapHeader: computed('communities', function() {
+    let comms = this.get('communities');
+    if (comms && comms.length === 1) {
+      return comms[0].name;
+    }
+    else {
+      return 'Click A Neighborhood to Filter';
+    }
   }),
 
   cfData: computed('data', function () {
@@ -35,7 +45,7 @@ export default Ember.Component.extend({
   }),
 
   markers: computed('records', function() {
-    let records = this.get('records');
+    let records = this.get('records') || [];
     if (this.get('community_area') && records.length) {
       return records.filter(
         (d) => {
@@ -59,13 +69,13 @@ export default Ember.Component.extend({
         geom: boundary.geom,
         name: boundary.name,
         value: selected.value,
-        color: 'rgba(0, 0, 255,0.5)'
+        color: 'rgba(70, 130, 180, 0.25)'
       }]
     }
     else {
       let max = Math.max(...group.getEach('value'));
       let min = Math.min(...group.getEach('value'));
-      let color = d3.scale.linear().domain([min,max]).range(['rgba(0, 0, 255,0)', 'rgba(0, 0, 255, 1)'])
+      let color = d3.scale.linear().domain([min,max]).range(['rgba(70, 130, 180, 0)', 'rgba(70, 130, 180, 1)'])
       comms = group.map(
         (d) => {
           let boundary = boundaries[d.key];
@@ -127,12 +137,17 @@ export default Ember.Component.extend({
           lng: event.latlng.lng,
         })
         Ember.run.later((() => {
-          this.set('zoom', 12);
+          this.set('zoom', 13);
         }), 300);
       }
       this.get('areaDim').filter(boundaryKey);
       this.set('community_area', boundaryKey);
       dc.redrawAll();
+    },
+    clearFilters() {
+      dc.filterAll();
+      this.send('filterComm', this.get('community_area'))
+      // dc.redrawAll();
     }
   }
 });

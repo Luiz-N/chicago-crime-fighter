@@ -9,17 +9,32 @@
   height: 100%;
 }
 
+.bottom-half {
+  margin-top: 50px;
+}
+
+.reset-button {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(70, 130, 180, .8);
+  color: white;
+  &:hover {
+    color: rgba(70, 130, 180, .8);
+    background-color: white;
+  }
+}
+
 .table-wrapper {
   overflow: scroll;
   & .lt-row {
     font-size: 14px;
     line-height: 2;
     border-bottom: 1px solid lightgrey;
+    text-align: center;
     &:hover {
-      background-color: lightgrey;
-    }
-    &.is-selected {
-      background-color: lightgrey;
+      // background-color: lightgrey;
+      cursor: default;
     }
   }
   & thead {

@@ -7,17 +7,18 @@
       Hello <b>{{row.firstName}}</b>
     {{/body.expanded-row}} --}}
 
-    {{#if isLoading}}
+    {{#if (and isLoading communityArea)}}
       {{#body.loader}}
-        Loading...
+        <h1>Loading...</h1>
       {{/body.loader}}
+
+      {{else if table.isEmpty}}
+        {{#body.no-data}}
+          <h3>Click a neighborhood on the map to see individual reports!</h3>
+        {{/body.no-data}}
     {{/if}}
 
-    {{#if table.isEmpty}}
-      {{#body.no-data}}
-        Click a neighborhood on the right to zoom in!
-      {{/body.no-data}}
-    {{/if}}
+
   {{/t.body}}
 
   {{!-- {{t.foot}} --}}

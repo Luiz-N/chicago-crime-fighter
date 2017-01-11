@@ -40,32 +40,31 @@ export default Ember.Route.extend({
           });
         });
     }
-    else if (params.community_area) {
-      if (params.primary_type) {
-        let types = params.primary_type.split(',');
-        types.forEach(
-          (type) => {
-            typesFilter.push(`primary_type = '${type}'`)
-          }
-        )
-        recordQuery.where.push(...[Soda.expr.or.apply(this, typesFilter)]);
-      }
-
-      if (params.year) {
-        let years = params.year.split(',');
-        years.forEach(
-          (year) => {
-            yearsFilter.push(`year = '${year}'`)
-          }
-        )
-        recordQuery.where.push(...[Soda.expr.or.apply(this, yearsFilter)]);
-      }
-
-      if (params.community_area) {
-        recordQuery.where.push(`community_area = '${params.community_area}'`);
-      }
-      promises.records = this.store.query('crime-data', recordQuery);
+    if (params.primary_type) {
+      let types = params.primary_type.split(',');
+      types.forEach(
+        (type) => {
+          typesFilter.push(`primary_type = '${type}'`)
+        }
+      )
+      recordQuery.where.push(...[Soda.expr.or.apply(this, typesFilter)]);
     }
+
+    if (params.year) {
+      let years = params.year.split(',');
+      years.forEach(
+        (year) => {
+          yearsFilter.push(`year = '${year}'`)
+        }
+      )
+      recordQuery.where.push(...[Soda.expr.or.apply(this, yearsFilter)]);
+    }
+
+    if (params.community_area) {
+      recordQuery.where.push(`community_area = '${params.community_area}'`);
+    }
+
+    promises.records = this.store.query('crime-data', recordQuery);
     this.store.unloadAll();
     return Ember.RSVP.hash(promises);
   },

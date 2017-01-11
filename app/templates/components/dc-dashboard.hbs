@@ -4,9 +4,9 @@
     {{!-- <div class="flex-20">
       <h3>pie chart</h3>
     </div> --}}
-  <div class="flex-25 layout-row">
+  <div class="flex-33 layout-row">
     <div class="flex chart">
-      <h3 class="title">Incident Reports by Year</h3>
+      <h3 class="title">Total Reported Crimes by Year</h3>
       {{line-chart
         class="flex"
         dim=yearDim
@@ -17,7 +17,7 @@
       }}
     </div>
     <div class="flex chart">
-      <h3>row chart</h3>
+      <h3>Total Reported Crimes by Type</h3>
       {{row-chart
         class="flex"
         dim=typeDim
@@ -28,23 +28,19 @@
       }}
     </div>
   </div>
-  <div class="flex layout-row">
+  <div class="flex layout-row bottom-half">
     {{typeFilters}}
     <div class="flex table-wrapper">
       {{#records-table
         records=records
         isLoading=isLoading
+        communityArea=community_area
       }}
 
       {{/records-table}}
-      {{!-- {{#each records as |record|}}
-        <div class="">
-          {{record.primaryType}}
-        </div>
-      {{/each}} --}}
     </div>
     <div class="flex chart">
-      <h3>map</h3>
+      <h3>{{mapHeader}}</h3>
       {{#leaflet-map lat=lat lng=lng zoom=zoom class="flex" as |layers|}}
         {{tile-layer url="http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"}}
           {{#each markers as |m|}}
@@ -58,12 +54,15 @@
 
           {{#each communities as |comm|}}
             {{#layers.geoJSON geoJSON=comm.geom key=comm.key weight=1 opacity=0.25 fillOpacity=0.75 fillColor=comm.color onClick=(action "filterComm" comm.key) as |area|}}
-              {{!-- {{#area.tooltip}}
-                {{comm.name}}
-              {{/area.tooltip}} --}}
+              {{#tooltip-layer}}
+                <h3>{{comm.name}}</h3>
+                {{comm.value}} reported crimes
+              {{/tooltip-layer}}
             {{/layers.geoJSON}}
           {{/each}}
       {{/leaflet-map}}
     </div>
   </div>
 {{/paper-content}}
+
+{{#paper-button class="reset-button" onClick=(action "clearFilters")}}Reset Filters{{/paper-button}}
