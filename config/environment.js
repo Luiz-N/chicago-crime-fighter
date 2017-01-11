@@ -1,5 +1,4 @@
 /* jshint node: true */
-
 module.exports = function(environment) {
   var ENV = {
     socrata: { dataRepo: 'data.cityofchicago.org', dataSet: '6zsd-86xi' },
